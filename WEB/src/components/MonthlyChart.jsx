@@ -130,7 +130,7 @@ const MonthlyChart = () => {
           <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Visualiza tus hábitos de gasto por tipo</p>
         </div>
         
-        <div style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.3rem', borderRadius: '12px' }}>
+        <div className="chart-filters" style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.3rem', borderRadius: '12px' }}>
           {filters.map(f => (
             <button
               key={f.id}

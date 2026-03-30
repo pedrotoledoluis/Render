@@ -91,7 +91,7 @@ const ExpenseForm = () => {
               required
             />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+          <div className="form-row-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
             <div>
                <label style={{ display: 'block', color: 'var(--text-dim)', marginBottom: '0.4rem', fontSize: '0.8rem' }}>Categoría</label>
                <select className="input-field" value={category} onChange={(e) => setCategory(e.target.value)} style={{ padding: '0.6rem' }}>

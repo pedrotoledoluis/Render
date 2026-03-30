@@ -20,8 +20,8 @@ const ExpenseTable = () => {
         <h2 className="gradient-text" style={{ fontSize: '1.4rem' }}>📋 Historial de Gastos</h2>
       </div>
 
-      <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+      <div className="table-responsive" style={{ borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+        <table style={{ width: '100%', minWidth: '500px', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead style={{ background: 'hsla(230, 25%, 5%, 0.5)' }}>
             <tr>
               <th style={{ padding: '1rem', color: 'var(--text-dim)', fontSize: '0.8rem', fontWeight: '500' }}>DESCRIPCIÓN</th>

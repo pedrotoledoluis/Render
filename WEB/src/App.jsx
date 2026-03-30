@@ -32,14 +32,14 @@ function App() {
   const weeks = ['Todas', 'Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
-      <header style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
+    <div className="app-wrapper" style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
+      <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: '2.5rem', fontWeight: '800' }} className="gradient-text">App Ahorros</h1>
           <p style={{ color: 'var(--text-dim)' }}>Controla tus finanzas con precisión</p>
         </div>
         
-        <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
           <div className="glass-panel" style={{ padding: '0.8rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--income)' }}>
               <Wallet size={18} />
@@ -79,7 +79,7 @@ function App() {
             </div>
           </div>
 
-          <nav className="glass-panel" style={{ padding: '0.4rem', display: 'flex', gap: '0.5rem' }}>
+          <nav className="glass-panel" style={{ padding: '0.4rem', display: 'flex', gap: '0.5rem', minWidth: '200px' }}>
             <button 
               onClick={() => setActiveTab('dashboard')}
               style={{

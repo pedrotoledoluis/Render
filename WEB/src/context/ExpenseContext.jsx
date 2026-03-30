@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 const ExpenseContext = createContext();
 
@@ -11,87 +12,116 @@ export const ExpenseProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const categories = ['Vivienda', 'Alimentación', 'Transporte', 'Salud', 'Servicios', 'Ocio', 'Otros'];
+  const currentYear = new Date().getFullYear();
 
-  const year = new Date().getFullYear();
-
-  // Load Config (Fixed Templates)
+  // Load Fixed Concepts (Templates)
   useEffect(() => {
-    fetch('/api/config')
-      .then(res => res.json())
-      .then(data => {
-        setFixedConfigState(data.fixedConfig || []);
-      })
-      .catch(err => console.error('Error loading config:', err));
+    const fetchTemplates = async () => {
+      const { data, error } = await supabase.from('fixed_concepts').select('*');
+      if (error) console.error('Error loading fixed concepts:', error);
+      else setFixedConfigState(data || []);
+    };
+    fetchTemplates();
   }, []);
 
   // Load Monthly Data (Income & Expenses)
   useEffect(() => {
-    setIsLoading(true);
-    fetch(`/api/expenses/${year}/${selectedMonth}`)
-      .then(res => res.json())
-      .then(data => {
-        setExpenses(data.expenses || []);
-        setIncomeState(data.income || 0);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error('Error loading monthly data:', err);
-        setExpenses([]);
-        setIncomeState(0);
-        setIsLoading(false);
-      });
-  }, [selectedMonth, year]);
+    const fetchMonthlyData = async () => {
+      setIsLoading(true);
+      
+      // Load Income for the month
+      const { data: configData, error: configError } = await supabase
+        .from('monthly_configs')
+        .select('income')
+        .eq('month_name', selectedMonth)
+        .eq('year', currentYear)
+        .maybeSingle();
+      
+      if (configError && configError.code !== 'PGRST116') { // PGRST116 is 'no rows'
+        console.error('Error loading income:', configError);
+      }
+      setIncomeState(configData?.income || 0);
 
-  const setIncome = (val) => {
+      // Load Expenses
+      const { data: expData, error: expError } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('month_name', selectedMonth)
+        .eq('year', currentYear);
+      
+      if (expError) console.error('Error loading expenses:', expError);
+      else setExpenses(expData || []);
+
+      setIsLoading(false);
+    };
+
+    fetchMonthlyData();
+  }, [selectedMonth, currentYear]);
+
+  const setIncome = async (val) => {
     const newVal = parseFloat(val) || 0;
     setIncomeState(newVal);
-    saveMonthlyData(newVal, expenses);
+    
+    // Upsert income config
+    const { error } = await supabase
+      .from('monthly_configs')
+      .upsert({ 
+        month_name: selectedMonth, 
+        year: currentYear, 
+        income: newVal 
+      }, { onConflict: 'month_name, year' });
+    
+    if (error) console.error('Error saving income:', error);
   };
 
-  const addFixedConfig = (item) => {
-    const newConfig = [...fixedConfig, { ...item, id: Date.now() }];
-    setFixedConfigState(newConfig);
-    fetch('/api/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ salary: income, fixedConfig: newConfig })
-    });
+  const addFixedConfig = async (item) => {
+    const { data, error } = await supabase
+      .from('fixed_concepts')
+      .insert([{ ...item }])
+      .select();
+
+    if (error) console.error('Error adding fixed concept:', error);
+    else if (data) setFixedConfigState([...fixedConfig, data[0]]);
   };
 
-  const deleteFixedConfig = (id) => {
-    const newConfig = fixedConfig.filter(c => c.id !== id);
-    setFixedConfigState(newConfig);
-    fetch('/api/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ salary: income, fixedConfig: newConfig })
-    });
+  const deleteFixedConfig = async (id) => {
+    const { error } = await supabase.from('fixed_concepts').delete().eq('id', id);
+    if (error) console.error('Error deleting fixed concept:', error);
+    else setFixedConfigState(fixedConfig.filter(c => c.id !== id));
   };
 
-  const addExpense = (expense) => {
-    const newExpenses = [...expenses, { ...expense, id: Date.now() }];
-    setExpenses(newExpenses);
-    saveMonthlyData(income, newExpenses);
+  const addExpense = async (expense) => {
+    const expenseData = {
+      ...expense,
+      month_name: selectedMonth,
+      year: currentYear
+    };
+    
+    // Remote Save
+    const { data, error } = await supabase
+      .from('expenses')
+      .insert([expenseData])
+      .select();
+
+    if (error) console.error('Error adding expense:', error);
+    else if (data) setExpenses([...expenses, data[0]]);
   };
 
-  const deleteExpense = (id) => {
-    const newExpenses = expenses.filter(e => e.id !== id);
-    setExpenses(newExpenses);
-    saveMonthlyData(income, newExpenses);
+  const deleteExpense = async (id) => {
+    const { error } = await supabase.from('expenses').delete().eq('id', id);
+    if (error) console.error('Error deleting expense:', error);
+    else setExpenses(expenses.filter(e => e.id !== id));
   };
 
-  const updateExpense = (id, updatedFields) => {
-    const newExpenses = expenses.map(e => e.id === id ? { ...e, ...updatedFields } : e);
-    setExpenses(newExpenses);
-    saveMonthlyData(income, newExpenses);
-  };
+  const updateExpense = async (id, updatedFields) => {
+    const { data, error } = await supabase
+      .from('expenses')
+      .update(updatedFields)
+      .eq('id', id)
+      .select();
 
-  const saveMonthlyData = (inc, expList) => {
-    fetch(`/api/expenses/${year}/${selectedMonth}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ income: inc, expenses: expList })
-    });
+    if (error) console.error('Error updating expense:', error);
+    else if (data) setExpenses(expenses.map(e => e.id === id ? { ...e, ...data[0] } : e));
   };
 
   const getTotals = () => {

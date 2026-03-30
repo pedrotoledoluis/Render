@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { useExpenses } from '../context/ExpenseContext';
+import { supabase } from '../lib/supabase';
 
 ChartJS.register(
   CategoryScale,
@@ -25,20 +26,24 @@ ChartJS.register(
 );
 
 const MonthlyChart = () => {
-  const { selectedMonth } = useExpenses();
+  const { selectedMonth, expenses } = useExpenses();
   const [allExpenses, setAllExpenses] = React.useState([]);
   const [chartType, setChartType] = React.useState('all');
   const currentYear = new Date().getFullYear();
 
   React.useEffect(() => {
-    fetch(`/api/expenses/all/${currentYear}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log('Yearly data:', data);
-        setAllExpenses(data || []);
-      })
-      .catch(err => console.error('Error fetching yearly data:', err));
-  }, [selectedMonth]); 
+    const fetchYearlyData = async () => {
+      const { data, error } = await supabase
+        .from('expenses')
+        .select('*')
+        .eq('year', currentYear);
+      
+      if (error) console.error('Error fetching yearly data:', error);
+      else setAllExpenses(data || []);
+    };
+
+    fetchYearlyData();
+  }, [selectedMonth, expenses]); // Reload when current month expenses change
 
   const months = [
     'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 

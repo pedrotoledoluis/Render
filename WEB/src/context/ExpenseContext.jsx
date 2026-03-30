@@ -91,11 +91,26 @@ export const ExpenseProvider = ({ children }) => {
   };
 
   const addExpense = async (expense) => {
+    // Derive month name and year from the actual date entered in the form
+    const MONTH_NAMES = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    let expenseMonthName = selectedMonth;
+    let expenseYear = currentYear;
+
+    if (expense.date) {
+      const parts = expense.date.split('-');
+      expenseYear = parseInt(parts[0]);
+      expenseMonthName = MONTH_NAMES[parseInt(parts[1]) - 1];
+    }
+
     const expenseData = {
       ...expense,
-      month_name: selectedMonth,
-      year: currentYear
+      month_name: expenseMonthName,
+      year: expenseYear
     };
+
     
     // Remote Save
     const { data, error } = await supabase

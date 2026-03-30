@@ -147,6 +147,12 @@ select.input-field option {
   align-items: flex-start;
 }
 
+/* Critical CSS Grid fix: prevent children from overflowing their column */
+.tracking-layout > * {
+  min-width: 0;
+  overflow: hidden;
+}
+
 @media (max-width: 900px) {
   .tracking-layout {
     grid-template-columns: 1fr;
@@ -220,8 +226,137 @@ select.input-field option {
 
 /* App wrapper padding reduction on mobile */
 .app-wrapper {
-  padding: 1rem !important;
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
 }
+
+/* Sidebar form must not exceed viewport */
+.sidebar-form {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Quick-add buttons: wrap and constrain text */
+.quick-add-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.quick-add-buttons button {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 100%;
+  text-align: left;
+}
+
+/* Summary cards: 2 cols on tablet, 1 on small mobile */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  .glass-card {
+    padding: 1rem !important;
+  }
+
+  .tracking-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .modal-content {
+    width: 95% !important;
+    max-height: 85vh !important;
+  }
+
+  /* Force header children to full width */
+  .app-wrapper header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .app-wrapper header > div:last-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  /* Every glass-panel inside the header fills full width */
+  .app-wrapper header .glass-panel {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Selects inside header fill available space */
+  .app-wrapper header select {
+    width: auto !important;
+    flex: 1;
+  }
+
+  /* Nav tabs fill full width with equal buttons */
+  .app-wrapper header nav {
+    width: 100% !important;
+  }
+
+  .app-wrapper header nav button {
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Responsive table: horizontal scroll instead of layout break */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+}
+
+/* Quick-add buttons: wrap and stay within bounds */
+.quick-add-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Chart filter buttons: scrollable horizontally on mobile */
+.chart-filters {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+
+.chart-filters::-webkit-scrollbar {
+  display: none;
+}
+
+/* Form two-column grid: stack on small screens */
+@media (max-width: 500px) {
+  .form-row-two-col {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Global overflow guard */
+html, body {
+  overflow-x: hidden;
+}
+
 
 /* Summary cards: 2 cols on tablet, 1 on small mobile */
 @media (max-width: 768px) {

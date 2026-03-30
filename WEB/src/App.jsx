@@ -39,7 +39,7 @@ function App() {
           <p style={{ color: 'var(--text-dim)' }}>Controla tus finanzas con precisión</p>
         </div>
         
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <div className="glass-panel" style={{ padding: '0.8rem 1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--income)' }}>
               <Wallet size={18} />
@@ -79,7 +79,7 @@ function App() {
             </div>
           </div>
 
-          <nav className="glass-panel" style={{ padding: '0.4rem', display: 'flex', gap: '0.5rem', minWidth: '200px' }}>
+          <nav className="glass-panel" style={{ padding: '0.4rem', display: 'flex', gap: '0.5rem' }}>
             <button 
               onClick={() => setActiveTab('dashboard')}
               style={{

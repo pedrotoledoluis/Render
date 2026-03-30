@@ -54,7 +54,7 @@ const ExpenseForm = () => {
         {/* Quick Add Section */}
         <div style={{ marginBottom: '1.5rem' }}>
           <p style={{ color: 'var(--text-dim)', fontSize: '0.75rem', marginBottom: '0.6rem', fontWeight: '600' }}>CONCEPTOS FIJOS (Click para añadir)</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          <div className="quick-add-buttons">
             {fixedConfig.map(c => (
               <button 
                 key={c.id} 

@@ -1,0 +1,85 @@
+{
+  "income": 4629.68,
+  "expenses": [
+    {
+      "description": "Agua",
+      "amount": 60,
+      "category": "Servicios",
+      "id": 1774837120052,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Luz",
+      "amount": 100,
+      "category": "Servicios",
+      "id": 1774837120743,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Internet",
+      "amount": 109,
+      "category": "Servicios",
+      "id": 1774837121872,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Triple Play Claro",
+      "amount": 165,
+      "category": "Servicios",
+      "id": 1774837123431,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Celulares",
+      "amount": 110,
+      "category": "Servicios",
+      "id": 1774837124672,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Gas",
+      "amount": 60,
+      "category": "Servicios",
+      "id": 1774837125857,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Alquiler + Deuda",
+      "amount": 1700,
+      "category": "Servicios",
+      "id": 1774837126566,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Mi Banco",
+      "amount": 340,
+      "category": "Servicios",
+      "id": 1774837127976,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Scotiabank",
+      "amount": 321,
+      "category": "Servicios",
+      "id": 1774837128854,
+      "type": "fixed",
+      "date": "2026-03-30"
+    },
+    {
+      "description": "Comida",
+      "amount": 500,
+      "category": "Servicios",
+      "id": 1774837129500,
+      "type": "fixed",
+      "date": "2026-03-30"
+    }
+  ]
+}

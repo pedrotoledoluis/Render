@@ -1,0 +1,13 @@
+{
+  "income": 4000,
+  "expenses": [
+    {
+      "description": "Prueba Feb",
+      "amount": 200,
+      "category": "Vivienda",
+      "type": "variable",
+      "date": "2026-03-29",
+      "id": 1774828232556
+    }
+  ]
+}

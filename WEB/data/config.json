@@ -1,0 +1,71 @@
+{
+  "salary": 4600,
+  "fixedConfig": [
+    {
+      "description": "Agua",
+      "amount": 60,
+      "category": "Servicios",
+      "id": 1774836822936
+    },
+    {
+      "description": "Luz",
+      "amount": 100,
+      "category": "Servicios",
+      "id": 1774836832942
+    },
+    {
+      "description": "Internet",
+      "amount": 109,
+      "category": "Servicios",
+      "id": 1774836846552
+    },
+    {
+      "description": "Triple Play Claro",
+      "amount": 165,
+      "category": "Servicios",
+      "id": 1774836863151
+    },
+    {
+      "description": "Celulares",
+      "amount": 110,
+      "category": "Servicios",
+      "id": 1774836908468
+    },
+    {
+      "description": "Gas",
+      "amount": 60,
+      "category": "Servicios",
+      "id": 1774836935745
+    },
+    {
+      "description": "Alquiler + Deuda",
+      "amount": 1700,
+      "category": "Servicios",
+      "id": 1774836970538
+    },
+    {
+      "description": "Alquiler",
+      "amount": 1500,
+      "category": "Servicios",
+      "id": 1774836980964
+    },
+    {
+      "description": "Mi Banco",
+      "amount": 340,
+      "category": "Servicios",
+      "id": 1774837045318
+    },
+    {
+      "description": "Scotiabank",
+      "amount": 321,
+      "category": "Servicios",
+      "id": 1774837057118
+    },
+    {
+      "description": "Comida",
+      "amount": 600,
+      "category": "Servicios",
+      "id": 1774837105634
+    }
+  ]
+}

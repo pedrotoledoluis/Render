@@ -105,14 +105,16 @@ export const ExpenseProvider = ({ children }) => {
       expenseMonthName = MONTH_NAMES[parseInt(parts[1]) - 1];
     }
 
+    // Strip out fields that belong to fixed_concepts but shouldn't be saved as columns in expenses
+    const { id, created_at, due_day, ...cleanExpense } = expense;
+
     const expenseData = {
-      ...expense,
+      ...cleanExpense,
       month_name: expenseMonthName,
       year: expenseYear,
-      is_paid: expense.is_paid !== undefined ? expense.is_paid : false
+      is_paid: cleanExpense.is_paid !== undefined ? cleanExpense.is_paid : false
     };
 
-    
     // Remote Save
     const { data, error } = await supabase
       .from('expenses')

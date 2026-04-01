@@ -3,15 +3,17 @@ import { useExpenses } from '../context/ExpenseContext';
 import { Plus, Trash2, CheckCircle, X } from 'lucide-react';
 
 const FixedExpenseManager = ({ onClose }) => {
-  const { fixedConfig, addFixedConfig, deleteFixedConfig, addExpense } = useExpenses();
+  const { fixedConfig, addFixedConfig, deleteFixedConfig, addExpense, selectedMonth } = useExpenses();
   const [desc, setDesc] = useState('');
   const [amount, setAmount] = useState('');
+  const [dueDay, setDueDay] = useState('1');
 
   const handleAdd = () => {
     if (!desc || !amount) return;
-    addFixedConfig({ description: desc, amount: parseFloat(amount), category: 'Servicios' });
+    addFixedConfig({ description: desc, amount: parseFloat(amount), category: 'Servicios', due_day: parseInt(dueDay) || 1 });
     setDesc('');
     setAmount('');
+    setDueDay('1');
   };
 
   const applyAll = () => {
@@ -21,10 +23,12 @@ const FixedExpenseManager = ({ onClose }) => {
     ];
     const monthIndex = monthsArr.indexOf(selectedMonth);
     const year = new Date().getFullYear();
-    const date = new Date(year, monthIndex, 1).toISOString().split('T')[0];
 
     fixedConfig.forEach(item => {
-      addExpense({ ...item, type: 'fixed', date });
+      const day = item.due_day || 1;
+      // Build YYYY-MM-DD manually to avoid timezone artifacts shifting it
+      const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      addExpense({ ...item, type: 'fixed', date: dateStr, is_paid: false });
     });
     alert(`Gastos fijos aplicados a ${selectedMonth}.`);
     onClose();
@@ -47,13 +51,13 @@ const FixedExpenseManager = ({ onClose }) => {
           Define tus cargos recurrentes. El sistema los guardará para que puedas aplicarlos cada mes con un solo clic.
         </p>
 
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
           <input 
             className="input-field" 
-            placeholder="Descripción (ej. Netflix, Luz, Internet)" 
+            placeholder="Descripción (ej. Netflix, Luz)" 
             value={desc} 
             onChange={(e) => setDesc(e.target.value)} 
-            style={{ flex: 2 }}
+            style={{ flex: 1.5, minWidth: '150px' }}
           />
           <input 
             type="number" 
@@ -61,7 +65,17 @@ const FixedExpenseManager = ({ onClose }) => {
             placeholder="Monto" 
             value={amount} 
             onChange={(e) => setAmount(e.target.value)} 
-            style={{ flex: 1 }}
+            style={{ flex: 1, minWidth: '80px' }}
+          />
+          <input 
+            type="number" 
+            min="1" max="31"
+            className="input-field" 
+            placeholder="Día Venc." 
+            value={dueDay} 
+            onChange={(e) => setDueDay(e.target.value)} 
+            style={{ flex: 0.5, minWidth: '80px' }}
+            title="Día de Vencimiento"
           />
           <button className="btn-primary" onClick={handleAdd}>
             <Plus size={24} />
@@ -72,8 +86,11 @@ const FixedExpenseManager = ({ onClose }) => {
           {fixedConfig.length > 0 ? (
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {fixedConfig.map(item => (
-                <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0', borderBottom: '1px solid var(--border-color)' }}>
-                  <span style={{ fontSize: '1.1rem' }}>{item.description}</span>
+                <li key={item.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0', borderBottom: '1px solid var(--border-color)', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '1.1rem' }}>{item.description}</span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>Vence el día {item.due_day || 1}</span>
+                  </div>
                   <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                     <span style={{ fontWeight: '700', fontSize: '1.1rem', color: 'var(--primary)' }}>{formatCurrency(item.amount)}</span>
                     <button 

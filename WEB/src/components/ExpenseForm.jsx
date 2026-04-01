@@ -108,7 +108,7 @@ const ExpenseForm = () => {
             </div>
           </div>
           <div>
-             <label style={{ display: 'block', color: 'var(--text-dim)', marginBottom: '0.4rem', fontSize: '0.8rem' }}>Fecha</label>
+             <label style={{ display: 'block', color: 'var(--text-dim)', marginBottom: '0.4rem', fontSize: '0.8rem' }}>Fecha de Vencimiento / Pago</label>
              <input type="date" className="input-field" value={date} onChange={(e) => setDate(e.target.value)} style={{ padding: '0.6rem' }} />
           </div>
           <button className="btn-primary" style={{ marginTop: '0.5rem', height: '48px' }}>

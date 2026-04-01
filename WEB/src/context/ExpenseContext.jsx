@@ -108,7 +108,8 @@ export const ExpenseProvider = ({ children }) => {
     const expenseData = {
       ...expense,
       month_name: expenseMonthName,
-      year: expenseYear
+      year: expenseYear,
+      is_paid: expense.is_paid !== undefined ? expense.is_paid : false
     };
 
     
@@ -139,28 +140,31 @@ export const ExpenseProvider = ({ children }) => {
     else if (data) setExpenses(expenses.map(e => e.id === id ? { ...e, ...data[0] } : e));
   };
 
-  const getTotals = () => {
-    const filtered = expenses.filter(e => {
-      if (selectedWeek === 'Todas') return true;
-      const day = new Date(e.date).getUTCDate(); 
-      const week = Math.ceil(day / 7);
-      return `Semana ${week}` === selectedWeek;
-    });
+    const getTotals = () => {
+      const filtered = expenses.filter(e => {
+        if (selectedWeek === 'Todas') return true;
+        const day = new Date(e.date).getUTCDate(); 
+        const week = Math.ceil(day / 7);
+        return `Semana ${week}` === selectedWeek;
+      });
 
-    const totalExpenses = filtered.reduce((sum, e) => sum + parseFloat(e.amount), 0);
-    const balance = income - totalExpenses;
+      // ONLY count paid expenses for totals
+      const paidExpenses = filtered.filter(e => e.is_paid === true);
 
-    const fixed = filtered.filter(e => e.type === 'fixed').reduce((sum, e) => sum + parseFloat(e.amount), 0);
-    const variable = filtered.filter(e => e.type === 'variable').reduce((sum, e) => sum + parseFloat(e.amount), 0);
-    const hormiga = filtered.filter(e => e.type === 'hormiga').reduce((sum, e) => sum + parseFloat(e.amount), 0);
+      const totalExpenses = paidExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+      const balance = income - totalExpenses;
 
-    const byCategory = categories.reduce((acc, cat) => {
-      acc[cat] = filtered.filter(e => e.category === cat).reduce((sum, e) => sum + parseFloat(e.amount), 0);
-      return acc;
-    }, {});
+      const fixed = paidExpenses.filter(e => e.type === 'fixed').reduce((sum, e) => sum + parseFloat(e.amount), 0);
+      const variable = paidExpenses.filter(e => e.type === 'variable').reduce((sum, e) => sum + parseFloat(e.amount), 0);
+      const hormiga = paidExpenses.filter(e => e.type === 'hormiga').reduce((sum, e) => sum + parseFloat(e.amount), 0);
 
-    return { totalExpenses, balance, fixed, variable, hormiga, byCategory, filtered };
-  };
+      const byCategory = categories.reduce((acc, cat) => {
+        acc[cat] = paidExpenses.filter(e => e.category === cat).reduce((sum, e) => sum + parseFloat(e.amount), 0);
+        return acc;
+      }, {});
+
+      return { totalExpenses, balance, fixed, variable, hormiga, byCategory, filtered };
+    };
 
   return (
     <ExpenseContext.Provider value={{ 
